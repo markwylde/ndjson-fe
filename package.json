@@ -1,0 +1,14 @@
+{
+  "name": "ndjson",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mocha": "^3.2.0"
+  }
+}
