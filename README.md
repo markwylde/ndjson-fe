@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/markwylde/ndjson-fe.svg?branch=master)](https://travis-ci.org/markwylde/ndjson-fe)
+
 # NdJsonFe
 This library allows you to parse NdJson from any stream, promise or event
 
