@@ -1,4 +1,4 @@
-const NdJsonFe = require('./ndjson-fe')
+const NdJsonFe = require('./index')
 const assert = require('assert')
 
 const ndFactory = function() {
