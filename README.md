@@ -5,17 +5,16 @@ This library allows you to parse NdJson from any stream, promise or event
 
 ```javascript
 stream.on('next', row => {
-	console.log('The next row is: ', row)
+  console.log('The next row is: ', row)
 })
 
 stream.on('error', e => {
-	console.log('There was an error: ', e)
+  console.log('There was an error: ', e)
 })
 
 stream.on('end', () => {
-	console.log('The stream has finished')
+  console.log('The stream has finished')
 })
-
 
 stream.emit('write', `{ "ONE": 1, "TWO": 2 }\n`)
 stream.emit('write', `{ "THREE": 1, `)
