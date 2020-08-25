@@ -1,8 +1,9 @@
 # ndjson-fe
 [![Build Status](https://travis-ci.org/markwylde/ndjson-fe.svg?branch=master)](https://travis-ci.org/markwylde/ndjson-fe)
 
-This library takes a ndjson (Newline Delimited JSON) stream and outputs events when it receives a full JSON object.
+This library takes a ndjson (Newline Delimited JSON) stream and outputs events containing each item when it receives a full JSON object.
 
+## Why?
 For example, if you have the following data coming from a stream:
 
 ```
