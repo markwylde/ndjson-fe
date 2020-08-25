@@ -1,7 +1,23 @@
-# NdJsonFe
+# ndjson-fe
 [![Build Status](https://travis-ci.org/markwylde/ndjson-fe.svg?branch=master)](https://travis-ci.org/markwylde/ndjson-fe)
 
-This library allows you to parse NdJson from any stream, promise or event
+This library takes a ndjson (Newline Delimited JSON) stream and outputs events when it receives a full JSON object.
+
+For example, if you have the following data coming from a stream:
+
+```
+{"a": 1}
+{"b": 2}
+{"c": 3}
+```
+
+The above data will emit three events when you listen to "next":
+```javascript
+feed.on('next', console.log)
+ // === {"a": 1}
+ // === {"b": 1}
+ // === {"c": 1}
+```
 
 ## Piping
 ```javascript
