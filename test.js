@@ -1,7 +1,54 @@
 /* global describe, it, beforeEach */
 
+const fs = require('fs');
+
 const ndJsonFe = require('./index');
 const assert = require('assert');
+
+describe('Feeding Stream - with another stream', function () {
+  it('works', function (done) {
+    const stream = ndJsonFe();
+    const events = [];
+
+    stream.on('next', result => { events.push(['next', result]); });
+    stream.on('error', result => { events.push(['error', result]); });
+
+    stream.on('end', () => {
+      assert.deepStrictEqual(events, [
+        ['next', { ONE: 1, TWO: 2 }],
+        ['next', { THREE: 1, FOUR: 4 }],
+        ['next', { FIVE: 5, SIX: 6 }],
+        ['next', { EIGHT: 8, SEVEN: 7 }],
+        ['next', { NINE: 9 }]
+      ]);
+      done();
+    });
+
+    const readable = fs.createReadStream('./test.json', { highWaterMark: 5 });
+    readable.pipe(stream);
+  });
+
+  it('breaks', function (done) {
+    const stream = ndJsonFe();
+    const events = [];
+
+    stream.on('next', result => { events.push(['next', result]); });
+    stream.on('error', result => { events.push(['error', result]); });
+
+    stream.on('error', () => {
+      assert.deepStrictEqual(events, [
+        ['next', { ONE: 1, TWO: 2 }],
+        ['next', { THREE: 1, FOUR: 4 }],
+        ['next', { FIVE: 5, SIX: 6 }],
+        ['error', 'Invalid JSON received:\n{ "SEVEN": 7, "EIGHT": 8 }{ "BROKEN\n']
+      ]);
+      done();
+    });
+
+    const readable = fs.createReadStream('./test-broke.json', { highWaterMark: 5 });
+    readable.pipe(stream);
+  });
+});
 
 describe('Feeding Stream - emit write', function () {
   beforeEach(function () {

@@ -3,28 +3,51 @@
 
 This library allows you to parse NdJson from any stream, promise or event
 
+## Piping
+```javascript
+const fs = require('fs');
+const ndJsonFe = require('ndJsonFe');
+const feed = ndJsonFe();
+
+feed.on('next', row => {
+  console.log('The next row is: ', row);
+});
+
+feed.on('error', e => {
+  console.log('There was an error: ', e);
+});
+
+feed.on('end', () => {
+  console.log('The stream has finished');
+});
+
+const reader = fs.createReadStream('./test.json');
+reader.pipe(feed)
+```
+
+## Manual
 ```javascript
 const ndJsonFe = require('ndJsonFe');
 const feed = ndJsonFe();
 
-stream.on('next', row => {
+feed.on('next', row => {
   console.log('The next row is: ', row);
 });
 
-stream.on('error', e => {
+feed.on('error', e => {
   console.log('There was an error: ', e);
 });
 
-stream.on('end', () => {
+feed.on('end', () => {
   console.log('The stream has finished');
 });
 
-stream.write(`{ "ONE": 1, "TWO": 2 }\n`);
-stream.write(`{ "THREE": 1, `);
-stream.write(`"FOUR": 4 }\n`);
-stream.write(`{ "FIVE": 5, "SIX": 6 }\n{ "SEVEN": 7`);
-stream.write(`, "EIGHT": 8 }`);
-stream.write(`{ "BROKEN\n`);
-stream.write(`{ "NINE": 9 }\n`);
-stream.end();
+feed.write(`{ "ONE": 1, "TWO": 2 }\n`);
+feed.write(`{ "THREE": 1, `);
+feed.write(`"FOUR": 4 }\n`);
+feed.write(`{ "FIVE": 5, "SIX": 6 }\n{ "SEVEN": 7`);
+feed.write(`, "EIGHT": 8 }`);
+feed.write(`{ "BROKEN\n`);
+feed.write(`{ "NINE": 9 }\n`);
+feed.end();
 ```
