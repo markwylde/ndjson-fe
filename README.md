@@ -14,9 +14,9 @@ For example, if you have the following data coming from a stream:
 The above data will emit three events when you listen to "next":
 ```javascript
 feed.on('next', console.log)
- // === {"a": 1}
- // === {"b": 1}
- // === {"c": 1}
+ // {a: 1}
+ // {b: 2}
+ // {c: 3}
 ```
 
 ## Piping
