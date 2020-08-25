@@ -1,185 +1,308 @@
-const NdJsonFe = require('./index')
-const assert = require('assert')
+/* global describe, it, beforeEach */
 
-const ndFactory = function() {
+const ndJsonFe = require('./index');
+const assert = require('assert');
 
-}
+describe('Feeding Stream - emit write', function () {
+  beforeEach(function () {
+    this.stream = ndJsonFe();
+    this.events = [];
 
-describe('Feeding Stream', function() {
+    this.stream.on('next', result => { this.events.push(['next', result]); });
+    this.stream.on('error', result => { this.events.push(['error', result]); });
+  });
 
-  beforeEach(function() {
-    this.stream = new NdJsonFe()
-    this.events = []
-
-    this.stream.on('next', result => { this.events.push(['next', result]) })
-    this.stream.on('error', result => { this.events.push(['error', result]) })
-  })
-
-  describe('Writing 1 full JSON object', function() {
-
-    it('should emit a "next" event with the parsed object', function(done) {
-
+  describe('Writing 1 full JSON object', function () {
+    it('should emit a "next" event with the parsed object', function (done) {
       this.stream.on('end', () => {
-        assert.deepEqual(this.events[0], ['next', { ONE: 1, TWO: 2}])
-        done()
-      })
+        assert.deepStrictEqual(this.events[0], ['next', { ONE: 1, TWO: 2 }]);
+        done();
+      });
 
-      this.stream.emit('write', `{ "ONE": 1, "TWO": 2 }\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ "ONE": 1, "TWO": 2 }\n');
+      this.stream.emit('end');
+    });
 
-    it('should raise only 1 event', function(done) {
+    it('should raise only 1 event', function (done) {
       this.stream.on('end', () => {
-        assert.equal(this.events.length, 1)
-        done()
-      })
+        assert.strictEqual(this.events.length, 1);
+        done();
+      });
 
-      this.stream.emit('write', `{ "ONE": 1, "TWO": 2 }\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ "ONE": 1, "TWO": 2 }\n');
+      this.stream.emit('end');
+    });
 
-    it('should not emit an "error" event', function(done) {
+    it('should not emit an "error" event', function (done) {
       this.stream.on('end', () => {
-        assert.equal(this.events[0][0], 'next')
-        done()
-      })
+        assert.strictEqual(this.events[0][0], 'next');
+        done();
+      });
 
-      this.stream.emit('write', `{ "ONE": 1, "TWO": 2 }\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ "ONE": 1, "TWO": 2 }\n');
+      this.stream.emit('end');
+    });
+  });
 
-  })
-
-  describe('Writing 1 broken JSON object', function() {
-
-    it('should emit an "error" event', function(done) {
-
+  describe('Writing 1 broken JSON object', function () {
+    it('should emit an "error" event', function (done) {
       this.stream.on('end', () => {
-        assert.deepEqual(this.events[0][0], 'error')
-        done()
-      })
+        assert.deepStrictEqual(this.events[0][0], 'error');
+        done();
+      });
 
-      this.stream.emit('write', `{ BROKEN\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ BROKEN\n');
+      this.stream.emit('end');
+    });
 
-    it('should raise only 1 event', function(done) {
+    it('should raise only 1 event', function (done) {
       this.stream.on('end', () => {
-        assert.equal(this.events.length, 1)
-        done()
-      })
+        assert.strictEqual(this.events.length, 1);
+        done();
+      });
 
-      this.stream.emit('write', `{ BROKEN\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ BROKEN\n');
+      this.stream.emit('end');
+    });
+  });
 
-  })
-
-  describe('Writing 2 JSON objects', function() {
-
-    it('should emit two "next" events with a parsed objects in the correct order', function(done) {
-
+  describe('Writing 2 JSON objects', function () {
+    it('should emit two "next" events with a parsed objects in the correct order', function (done) {
       this.stream.on('end', () => {
-        assert.deepEqual(this.events, [["next", { ONE: 1, TWO: 2}], ["next", {THREE: 3, FOUR: 4}]])
-        done()
-      })
+        assert.deepStrictEqual(this.events, [['next', { ONE: 1, TWO: 2 }], ['next', { THREE: 3, FOUR: 4 }]]);
+        done();
+      });
 
-      this.stream.emit('write', `{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.emit('end');
+    });
 
-    it('should raise only 2 events', function(done) {
+    it('should raise only 2 events', function (done) {
       this.stream.on('end', () => {
-        assert.equal(this.events.length, 2)
-        done()
-      })
+        assert.strictEqual(this.events.length, 2);
+        done();
+      });
 
-      this.stream.emit('write', `{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.emit('end');
+    });
+  });
 
-  })
-
-  describe('Writing 2 full JSON objects and 1 broken one', function() {
-
-    it('should emit two "next" events with a parsed objects in the correct order', function(done) {
-
+  describe('Writing 2 full JSON objects and 1 broken one', function () {
+    it('should emit two "next" events with a parsed objects in the correct order', function (done) {
       this.stream.on('end', () => {
-        assert.deepEqual(this.events[0], ["next", { ONE: 1, TWO: 2}])
-        assert.deepEqual(this.events[1], ["next", { THREE: 3, FOUR: 4}])
-        done()
-      })
+        assert.deepStrictEqual(this.events[0], ['next', { ONE: 1, TWO: 2 }]);
+        assert.deepStrictEqual(this.events[1], ['next', { THREE: 3, FOUR: 4 }]);
+        done();
+      });
 
-      this.stream.emit('write', `{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n');
+      this.stream.emit('end');
+    });
 
-    it('should emit an "error" event', function(done) {
-
+    it('should emit an "error" event', function (done) {
       this.stream.on('end', () => {
-        assert.deepEqual(this.events[2][0], 'error')
-        done()
-      })
+        assert.deepStrictEqual(this.events[2][0], 'error');
+        done();
+      });
 
-      this.stream.emit('write', `{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n');
+      this.stream.emit('end');
+    });
 
-
-    it('should raise only 3 events', function(done) {
+    it('should raise only 3 events', function (done) {
       this.stream.on('end', () => {
-        assert.equal(this.events.length, 3)
-        done()
-      })
+        assert.strictEqual(this.events.length, 3);
+        done();
+      });
 
-      this.stream.emit('write', `{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n');
+      this.stream.emit('end');
+    });
+  });
 
-  })
-
-  describe('Writing 1 Broken line and 2 full JSON objects', function() {
-
-    it('should emit one "error" event and two "next" events with a parsed objects in the correct order', function(done) {
-
+  describe('Writing 1 Broken line and 2 full JSON objects', function () {
+    it('should emit one "error" event and two "next" events with a parsed objects in the correct order', function (done) {
       this.stream.on('end', () => {
-        assert.deepEqual(this.events[1], ["next", { ONE: 1, TWO: 2}])
-        assert.deepEqual(this.events[2], ["next", { THREE: 3, FOUR: 4}])
-        done()
-      })
+        assert.deepStrictEqual(this.events[1], ['next', { ONE: 1, TWO: 2 }]);
+        assert.deepStrictEqual(this.events[2], ['next', { THREE: 3, FOUR: 4 }]);
+        done();
+      });
 
-      this.stream.emit('write', `{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.emit('end');
+    });
 
-    it('should emit an "error" event', function(done) {
-
+    it('should emit an "error" event', function (done) {
       this.stream.on('end', () => {
-        assert.deepEqual(this.events[0][0], 'error')
-        done()
-      })
+        assert.deepStrictEqual(this.events[0][0], 'error');
+        done();
+      });
 
-      this.stream.emit('write', `{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.emit('end');
+    });
 
-
-    it('should raise only 3 events', function(done) {
+    it('should raise only 3 events', function (done) {
       this.stream.on('end', () => {
-        assert.equal(this.events.length, 3)
-        done()
-      })
+        assert.strictEqual(this.events.length, 3);
+        done();
+      });
 
-      this.stream.emit('write', `{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n`)
-      this.stream.emit('end')
-    })
+      this.stream.emit('write', '{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.emit('end');
+    });
+  });
+});
 
-  })
+describe('Feeding Stream - write', function () {
+  beforeEach(function () {
+    this.stream = ndJsonFe();
+    this.events = [];
 
-})
+    this.stream.on('next', result => { this.events.push(['next', result]); });
+    this.stream.on('error', result => { this.events.push(['error', result]); });
+  });
 
+  describe('Writing 1 full JSON object', function () {
+    it('should emit a "next" event with the parsed object', function (done) {
+      this.stream.on('end', () => {
+        assert.deepStrictEqual(this.events[0], ['next', { ONE: 1, TWO: 2 }]);
+        done();
+      });
 
+      this.stream.write('{ "ONE": 1, "TWO": 2 }\n');
+      this.stream.end();
+    });
 
+    it('should raise only 1 event', function (done) {
+      this.stream.on('end', () => {
+        assert.strictEqual(this.events.length, 1);
+        done();
+      });
 
+      this.stream.write('{ "ONE": 1, "TWO": 2 }\n');
+      this.stream.end();
+    });
 
+    it('should not emit an "error" event', function (done) {
+      this.stream.on('end', () => {
+        assert.strictEqual(this.events[0][0], 'next');
+        done();
+      });
 
+      this.stream.write('{ "ONE": 1, "TWO": 2 }\n');
+      this.stream.end();
+    });
+  });
+
+  describe('Writing 1 broken JSON object', function () {
+    it('should emit an "error" event', function (done) {
+      this.stream.on('end', () => {
+        assert.deepStrictEqual(this.events[0][0], 'error');
+        done();
+      });
+
+      this.stream.write('{ BROKEN\n');
+      this.stream.end();
+    });
+
+    it('should raise only 1 event', function (done) {
+      this.stream.on('end', () => {
+        assert.strictEqual(this.events.length, 1);
+        done();
+      });
+
+      this.stream.write('{ BROKEN\n');
+      this.stream.end();
+    });
+  });
+
+  describe('Writing 2 JSON objects', function () {
+    it('should emit two "next" events with a parsed objects in the correct order', function (done) {
+      this.stream.on('end', () => {
+        assert.deepStrictEqual(this.events, [['next', { ONE: 1, TWO: 2 }], ['next', { THREE: 3, FOUR: 4 }]]);
+        done();
+      });
+
+      this.stream.write('{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.end();
+    });
+
+    it('should raise only 2 events', function (done) {
+      this.stream.on('end', () => {
+        assert.strictEqual(this.events.length, 2);
+        done();
+      });
+
+      this.stream.write('{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.end();
+    });
+  });
+
+  describe('Writing 2 full JSON objects and 1 broken one', function () {
+    it('should emit two "next" events with a parsed objects in the correct order', function (done) {
+      this.stream.on('end', () => {
+        assert.deepStrictEqual(this.events[0], ['next', { ONE: 1, TWO: 2 }]);
+        assert.deepStrictEqual(this.events[1], ['next', { THREE: 3, FOUR: 4 }]);
+        done();
+      });
+
+      this.stream.write('{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n');
+      this.stream.end();
+    });
+
+    it('should emit an "error" event', function (done) {
+      this.stream.on('end', () => {
+        assert.deepStrictEqual(this.events[2][0], 'error');
+        done();
+      });
+
+      this.stream.write('{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n');
+      this.stream.end();
+    });
+
+    it('should raise only 3 events', function (done) {
+      this.stream.on('end', () => {
+        assert.strictEqual(this.events.length, 3);
+        done();
+      });
+
+      this.stream.write('{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n{ BROKEN\n');
+      this.stream.end();
+    });
+  });
+
+  describe('Writing 1 Broken line and 2 full JSON objects', function () {
+    it('should emit one "error" event and two "next" events with a parsed objects in the correct order', function (done) {
+      this.stream.on('end', () => {
+        assert.deepStrictEqual(this.events[1], ['next', { ONE: 1, TWO: 2 }]);
+        assert.deepStrictEqual(this.events[2], ['next', { THREE: 3, FOUR: 4 }]);
+        done();
+      });
+
+      this.stream.write('{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.end();
+    });
+
+    it('should emit an "error" event', function (done) {
+      this.stream.on('end', () => {
+        assert.deepStrictEqual(this.events[0][0], 'error');
+        done();
+      });
+
+      this.stream.write('{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.end();
+    });
+
+    it('should raise only 3 events', function (done) {
+      this.stream.on('end', () => {
+        assert.strictEqual(this.events.length, 3);
+        done();
+      });
+
+      this.stream.write('{ BROKEN\n{ "ONE": 1, "TWO": 2}\n{ "THREE": 3, "FOUR": 4 }\n');
+      this.stream.end();
+    });
+  });
+});
