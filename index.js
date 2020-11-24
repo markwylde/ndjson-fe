@@ -10,17 +10,20 @@ function ndJsonFe () {
     lines.forEach((row, index) => {
       if (row === '') return;
 
+      let parsed;
       try {
-        const parsed = JSON.parse(row);
-        myEmitter.emit('next', parsed);
-        buffer = '';
+        parsed = JSON.parse(row);
       } catch (error) {
         if (index === lines.length - 1) {
           buffer = row;
         } else {
           myEmitter.emit('error', `Invalid JSON received:\n${row}\n`);
         }
+        return;
       }
+
+      myEmitter.emit('next', parsed);
+      buffer = '';
     });
   });
 
