@@ -8,9 +8,7 @@
   },
   "author": "",
   "license": "MIT",
-  "devDependencies": {},
-  "dependencies": {
-    "mocha": "^8.2.0",
-    "tape": "^5.0.1"
+  "devDependencies": {
+    "mocha": "^8.2.1"
   }
 }
