@@ -23,7 +23,7 @@ feed.on('next', console.log)
 ## Piping
 ```javascript
 const fs = require('fs');
-const ndJsonFe = require('ndJsonFe');
+const ndJsonFe = require('ndjson-fe');
 const feed = ndJsonFe();
 
 feed.on('next', row => {
@@ -44,7 +44,7 @@ reader.pipe(feed)
 
 ## Manual
 ```javascript
-const ndJsonFe = require('ndJsonFe');
+const ndJsonFe = require('ndjson-fe');
 const feed = ndJsonFe();
 
 feed.on('next', row => {
