@@ -1,5 +1,8 @@
 # ndjson-fe
-[![Build Status](https://travis-ci.org/markwylde/ndjson-fe.svg?branch=master)](https://travis-ci.org/markwylde/ndjson-fe)
+![Node.js Test Runner](https://github.com/markwylde/ndjson-fe/workflows/Node.js%20Test%20Runner/badge.svg)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/markwylde/ndjson-fe)
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/markwylde/ndjson-fe)](https://github.com/markwylde/ndjson-fe/releases)
+[![GitHub](https://img.shields.io/github/license/markwylde/ndjson-fe)](https://github.com/markwylde/ndjson-fe/blob/master/LICENSE)
 
 This library takes a ndjson (Newline Delimited JSON) stream and outputs events containing each item when it receives a full JSON object.
 
