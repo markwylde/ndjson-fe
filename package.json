@@ -9,6 +9,15 @@
   "files": [
     "index.js"
   ],
+  "engines": {
+    "node": ">=10"
+  },
+  "keywords": [
+    "ndjson",
+    "ldjson",
+    "json",
+    "Json stream"
+  ],
   "author": {
     "name": "Mark Wylde",
     "email": "me@markwylde.com",
@@ -16,6 +25,9 @@
   },
   "repository": {
     "url": "https://github.com/markwylde/ndjson-fe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/markwylde/ndjson-fe/issues"
   },
   "license": "MIT",
   "devDependencies": {
