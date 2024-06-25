@@ -1,6 +1,6 @@
 {
   "name": "ndjson-fe",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "description": "This library takes a ndjson (Newline Delimited JSON) stream and outputs events containing each item when it receives a full JSON object.",
   "main": "index.js",
   "scripts": {
